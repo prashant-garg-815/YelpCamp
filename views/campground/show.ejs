@@ -1,0 +1,65 @@
+<% layout('layouts/boilerplate') -%> 
+
+
+
+  <div class="row">
+      <div class="col-6">
+        <div class="card" >
+            <img src="<%= campground.image %>" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title"><%= campground.title %></h5>
+              <p class="card-text"><%= campground.description %></p>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item text-muted"><%= campground.location %></li>
+              <li class="list-group-item">$<%= campground.price %>/night</li>
+            </ul>
+            <div class="card-body">
+              <a href="/campgrounds/<%= campground._id %>/edit" class="card-link btn btn-warning">Edit</a>
+              <form class="d-inline" action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
+                <button class="btn btn-danger">Delete</button>
+            </form>
+            </div>
+            <div class="card-footer text-muted">
+                <a href="/campgrounds">All campgrounds</a>
+              </div>
+          </div>  
+      </div>
+      <div class="col-6">
+        <form action="/campgrounds/<%= campground._id %>/reviews" method="POST"class="mb-3 needs-validation" novalidate>
+          <h3>Leave a review</h3>
+          <div class="mb-3">
+            <label for="rating" class="form-label">Rating</label>
+            <input type="range" class="form-range" id="rating" min="1" max="5" name="review[rating]">
+            <div class="invalid-feedback">
+              Price cannot be null
+            </div>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="body" class="form-label">Review</label>
+            <textarea name="review[body]" class="form-control" id="body" cols="30" rows="2" required></textarea>
+            <div class="invalid-feedback">
+              Review cannot be empty
+            </div>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+          </div>
+          <button class="btn btn-success">Submit</button>
+        </form>
+        <% for(let review of campground.reviews){ %> 
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Rating: <%= review.rating %></h5>
+              <p class="card-text"><%= review.body %></p>
+              <form action="/campgrounds/<%= campground._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
+                <button class="btn btn-sm btn-danger">Delete</button>
+              </form>
+            </div>
+          </div>
+        <% } %> 
+      </div>
+  </div>
