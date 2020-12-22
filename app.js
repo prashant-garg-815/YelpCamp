@@ -37,12 +37,6 @@ db.once('open', ()=> {
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.get('/', (req, res)=>{
-    //res.send('Welcome to YelpCamp')
-    res.redirect('/campgrounds');
-})
-
-
 const sessionConfig = {
     secret: "Get a session secret that's woth it!!!",
     resave: false,
@@ -57,9 +51,14 @@ app.use(session(sessionConfig));
 app.use(express.static('public'));
 app.use(flash());
 app.use((req, res, next)=>{
-    res.locals.success = req.flash(success);
-    res.locals.error = req.flash(error);
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
     next();
+})
+
+app.get('/', (req, res)=>{
+    //res.send('Welcome to YelpCamp')
+    res.redirect('/campgrounds');
 })
 app.use('/campgrounds', campgrounds);
 app.use('/campgrounds/:id/reviews', reviews);
