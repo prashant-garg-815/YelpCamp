@@ -2,7 +2,7 @@
 
     <div class="row">
         <h1 class="text-center">Edit CampGround</h1>
-        <form action="/campgrounds" method="POST" novalidate class="needs-validation">
+        <form action="/campgrounds/<%= camp._id %>/?_method=PUT " method="POST" novalidate class="needs-validation">
             <div class="mb-3">
                 <label class="form-label" for="title">Title</label>
                 <input class="form-control" value="<%= camp.title %> " type="text" id="title" placeholder="Title" name="title" required>
