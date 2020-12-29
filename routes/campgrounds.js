@@ -77,7 +77,7 @@ router.get('/:id', catchAsync(async(req, res)=>{
     res.render('campground/show', {campground});
 }))
 
-router.get('/:id/edit', isLoggedIn, catchAsync(async(req, res)=>{
+router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync(async(req, res)=>{
     //res.render('campground/edit', {camp});
     console.log('lol');
     const camp = await Campground.findById(req.params.id);

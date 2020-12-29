@@ -1,14 +1,15 @@
 const Campground = require('./models/campground');
 const {campgroundSchema, reviewSchema} = require('./schemas.js');
 const catchAsync = require('./utils/catchAsync');
+const Review = require('./models/review');
 const ExpressError = require('./utils/ExpressError');
 
 module.exports.isAuthor = catchAsync(async(req, res, next)=>{
     const { id } = req.params;
     console.log('before');
-    const camp = await Campground.findById(id);
+    const campground = await Campground.findById(id);
     console.log('after');
-    if(!camp.author.equals(req.user._id)){
+    if(!campground.author.equals(req.user._id)){
         req.flash('error', "You must be the author of the campground to edit")
         res.redirect(`/campgrounds/${id}`);
     }
