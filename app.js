@@ -66,6 +66,7 @@ app.use(flash());
 app.use((req, res, next)=>{
     //console.log(req.session);
     res.locals.currentUser = req.user;
+    //console.log(res.locals.currentUser);
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
@@ -77,11 +78,11 @@ app.get('/', (req, res)=>{
     res.redirect('/campgrounds');
 })
 
-app.get('/fakeUser', async(req, res)=>{
-    const User = new user({email: 'prashantgarg815@gmail.com', username: 'rashant'});
-    const newUser = await user.register(User, 'thiS is my password');
-    res.send(newUser);
-})
+// app.get('/fakeUser', async(req, res)=>{
+//     const User = new user({email: 'prashantgarg815@gmail.com', username: 'rashant'});
+//     const newUser = await user.register(User, 'thiS is my password');
+//     res.send(newUser);
+// })
 
 app.use('/', registerRouter);
 app.use('/campgrounds', campgroundRouter);
