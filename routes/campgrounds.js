@@ -24,7 +24,7 @@ router.get('/', catchAsync (async(req, res)=>{
     res.render('campground/index', {campgrounds});
 }))
 
-router.delete('/:id', isLoggedIn, catchAsync(async(req, res)=>{
+router.delete('/:id', isLoggedIn, isAuthor, catchAsync(async(req, res)=>{
     const {id} = req.params;
     const campground = await Campground.findById(id);
     if(campground.author.equals(req.user._id)){
@@ -68,7 +68,12 @@ router.get('/new', isLoggedIn, (req, res)=>{
 
 router.get('/:id', catchAsync(async(req, res)=>{
     const {id} = req.params;
-    const campground = await Campground.findById(id).populate('reviews').populate('author');
+    const campground = await Campground.findById(id).populate({
+        path:'reviews',
+        populate: {
+            path: 'author'
+        }
+    }).populate('author');
     if(!campground){
         req.flash('error', 'Campground does not exist anymore!!');
         return res.redirect('/campgrounds');

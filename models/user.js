@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const passportLocalMongoose = require('passport-local-mongoose');
-const { use } = require('../routes/reviews');
+//const { use } = require('../routes/reviews');
 
 const userSchema = new Schema({
     email: {
