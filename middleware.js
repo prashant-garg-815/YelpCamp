@@ -18,7 +18,7 @@ module.exports.isAuthor = catchAsync(async(req, res, next)=>{
 
 module.exports.isReviewAuthor = catchAsync(async(req, res, next)=>{
     const { id, reviewId } = req.params;
-    const campground = await Campground.findById(reviewId);
+    const review = await Review.findById(reviewId);
     if(!review.author.equals(req.user._id)){
         req.flash('error', "You must be the author of the campground to edit")
         res.redirect(`/campgrounds/${id}`);
