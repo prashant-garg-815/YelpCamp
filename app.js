@@ -1,13 +1,20 @@
+if(process.env.NODE_ENV!=='production'){
+    require('dotenv').config();
+}
 const express = require('express');
 const app = express();
 const ejsMate = require('ejs-mate');
 const path = require('path');
 const Campground = require('./models/campground');
 const methodOverride = require('method-override');
-const campgrounds = require('./routes/campgrounds');
-const reviews = require('./routes/reviews');
+const campgroundRouter = require('./routes/campgrounds');
+const registerRouter = require('./routes/users')
+const reviewRouter = require('./routes/reviews');
 const session = require('express-session');
 const flash = require('connect-flash');
+const passport = require('passport');
+const localStrategy = require('passport-local');
+const user = require('./models/user');
 
 app.use(methodOverride('_method'));
 app.use(express.urlencoded({extended: true}));
@@ -38,7 +45,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 const sessionConfig = {
-    secret: "Get a session secret that's woth it!!!",
+    secret: "Get a session secret that's worth it!!!",
     resave: false,
     saveUninitialized: true,
     cookie:{
@@ -49,19 +56,40 @@ const sessionConfig = {
 }
 app.use(session(sessionConfig));
 app.use(express.static('public'));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new localStrategy(user.authenticate()));
+//authenticate is a fucntion aded to the user model automatically by the passport-local-mongoose
+passport.serializeUser(user.serializeUser());
+passport.deserializeUser(user.deserializeUser());
+
 app.use(flash());
 app.use((req, res, next)=>{
+    //console.log(req.session);
+    res.locals.currentUser = req.user;
+    //console.log(res.locals.currentUser);
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
 })
 
+
 app.get('/', (req, res)=>{
     //res.send('Welcome to YelpCamp')
     res.redirect('/campgrounds');
 })
-app.use('/campgrounds', campgrounds);
-app.use('/campgrounds/:id/reviews', reviews);
+
+// app.get('/fakeUser', async(req, res)=>{
+//     const User = new user({email: 'prashantgarg815@gmail.com', username: 'rashant'});
+//     const newUser = await user.register(User, 'thiS is my password');
+//     res.send(newUser);
+// })
+
+app.use('/', registerRouter);
+app.use('/campgrounds', campgroundRouter);
+app.use('/campgrounds/:id/reviews', reviewRouter);
 
 
 // app.all('*', (err,req, res, next)=>{
